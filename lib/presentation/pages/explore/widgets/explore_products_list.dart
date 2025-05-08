@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/pages/explore/widgets/best_selling_products_list.dart';
-import 'package:mobile_shop/pages/explore/widgets/products_grid_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/products_grid_list.dart';
 
 class MoreToExploreProductsList extends StatelessWidget {
   MoreToExploreProductsList({super.key});

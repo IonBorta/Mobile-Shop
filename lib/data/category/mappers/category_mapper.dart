@@ -1,0 +1,11 @@
+import 'package:mobile_shop/data/category/models/category.dart';
+import 'package:mobile_shop/domain/category/entities/category.dart';
+
+class CategoryMapper {
+  static CategoryEntity modelToEntitiy(CategoryModel model){
+    return CategoryEntity(
+      name: model.name,
+      icon: model.icon
+    );
+  }
+}

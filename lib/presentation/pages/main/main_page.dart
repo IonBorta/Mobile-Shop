@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/pages/explore/explore_page.dart';
+import 'package:mobile_shop/presentation/pages/explore/explore_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/pages/explore/widgets/categories_list.dart';
-import 'package:mobile_shop/pages/explore/widgets/best_selling_products_list.dart';
-import 'package:mobile_shop/pages/explore/widgets/explore_products_list.dart';
-import 'package:mobile_shop/pages/explore/widgets/searchbar_and_cameraicon.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/categories_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/explore_products_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/searchbar_and_cameraicon.dart';
 
-class ExplorePage extends StatelessWidget {
+class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
+
+  @override
+  State<ExplorePage> createState() => _ExplorePageState();
+}
+
+class _ExplorePageState extends State<ExplorePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoriesBloc>().add(LoadCategories());
+  }
 
   @override
   Widget build(BuildContext context) {

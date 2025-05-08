@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/pages/product_details/widgets/product_description.dart';
-import 'package:mobile_shop/pages/product_details/widgets/product_images_galery.dart';
-import 'package:mobile_shop/pages/product_details/widgets/product_options.dart';
-import 'package:mobile_shop/pages/product_details/widgets/product_price_and_button.dart';
-import 'package:mobile_shop/pages/product_details/widgets/product_title.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_description.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_images_galery.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_options.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_price_and_button.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_title.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   const ProductDetailsPage({super.key});

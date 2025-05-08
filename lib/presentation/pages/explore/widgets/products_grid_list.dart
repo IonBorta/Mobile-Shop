@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/pages/explore/widgets/best_selling_products_list.dart';
-import 'package:mobile_shop/pages/explore/widgets/product_list_item.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
+import 'package:mobile_shop/presentation/pages/explore/widgets/product_list_item.dart';
 
 class ProductsGridList extends StatelessWidget {
   final List<Product> products;
