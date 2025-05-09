@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductImagesGalery extends StatelessWidget {
@@ -21,12 +22,22 @@ class ProductImagesGalery extends StatelessWidget {
             child: PageView.builder(
               itemCount: imageUrls.length,
               itemBuilder: (context, index) {
-                return imageUrls[index].startsWith("http://127.0.0.1:8000") ? 
-                Placeholder(child: Center(child: Text("NO IMAGE FOUND")),) :
-                Image.network(
-                  imageUrls[index],
+              return CachedNetworkImage(
+                  imageUrl: imageUrls[index],
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.broken_image,size: 100,),
+                  ),
                 );
+                // return imageUrls[index].startsWith("http://127.0.0.1:8000") ? 
+                // Placeholder(child: Center(child: Text("NO IMAGE FOUND")),) :
+                // Image.network(
+                //   imageUrls[index],
+                //   fit: BoxFit.cover,
+                // );
               },
             ),
           ),

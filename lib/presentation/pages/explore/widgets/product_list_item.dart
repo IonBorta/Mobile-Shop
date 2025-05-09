@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
@@ -45,16 +46,23 @@ class ProductListItem extends StatelessWidget {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
-                    child:
-                        product.mainImage == null
-                            ? Placeholder(
-                              child: Center(child: Text("IMAGE IS MISSING")),
-                            )
-                            : Image.network(
-                              product.mainImage!,
-                              fit: BoxFit.cover,
-                              //webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                    child: product.mainImage == null
+                        ? Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Text("IMAGE IS MISSING"),
                             ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: product.mainImage!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) => const Center(
+                              child: Icon(Icons.broken_image),
+                            ),
+                          ),
                   ),
                 ),
                 FavoriteStarIcon(),
