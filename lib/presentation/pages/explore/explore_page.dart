@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
+import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/categories_list.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/explore_products_list.dart';
@@ -19,6 +20,7 @@ class _ExplorePageState extends State<ExplorePage> {
   void initState() {
     super.initState();
     context.read<CategoriesBloc>().add(LoadCategories());
+    context.read<ProductsBloc>().add(LoadProducts());
   }
 
   @override
@@ -38,7 +40,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   children: [
                     BestSellingProductsList(),
                     const SizedBox(height: 44,),
-                    MoreToExploreProductsList()
+                    //MoreToExploreProductsList()
                   ],
                 )
               )

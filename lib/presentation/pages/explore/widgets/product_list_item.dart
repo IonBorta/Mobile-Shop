@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
+import 'package:mobile_shop/domain/product/entities/product.dart';
 import 'package:mobile_shop/presentation/pages/product_details/product_details_page.dart';
 
 class ProductListItem extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
   const ProductListItem({super.key, required this.product});
+  final String defaultImage = "https://img.joomcdn.net/077bbe2ce1543f1cbd0a7201dec19a54d0e58233_original.jpeg";
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,9 @@ class ProductListItem extends StatelessWidget {
                         Positioned.fill(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(4),
-                            child: Image.network(
-                              product.imageUrl,
+                            child: product.mainImage == null ? Placeholder(child: Center(child: Text("IMAGE IS MISSING"),),) : 
+                              Image.network(
+                              product.mainImage!,
                               fit: BoxFit.cover,
                               //webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                             ),
@@ -39,10 +41,12 @@ class ProductListItem extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    product.name,
+                    product.name ?? "Unknow",
                     style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,height: 24/16),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                   ),
-                  Text('\$${product.price.toStringAsFixed(2)}',
+                  Text('\$${product.price}',
                     style: TextStyle(
                       color: Color(0xff00C569),
                       fontSize: 16,fontWeight: FontWeight.w400,height: 24/16

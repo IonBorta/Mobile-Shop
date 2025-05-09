@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
+import 'package:mobile_shop/domain/product/entities/product.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/product_list_item.dart';
 
 class ProductsGridList extends StatelessWidget {
-  final List<Product> products;
+  final List<ProductEntity> products;
 
   const ProductsGridList({super.key, required this.products});
 

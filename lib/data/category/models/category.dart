@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class CategoryModel {
+  final int? id;
   final String? name;
   final String? icon;
 
   CategoryModel({
     this.name,
     this.icon,
+    this.id
   });
 
   CategoryModel copyWith({
@@ -23,6 +25,7 @@ class CategoryModel {
     return <String, dynamic>{
       'name': name,
       'image': icon,
+      'id': id
     };
   }
 
@@ -30,6 +33,7 @@ class CategoryModel {
     return CategoryModel(
       name: map['name'] != null ? map['name'] as String : null,
       icon: map['icon'] != null ? map['icon'] as String : null,
+      id: map['id'] != null ? map['id'] as int : null,
     );
   }
 
@@ -38,7 +42,7 @@ class CategoryModel {
   factory CategoryModel.fromJson(String source) => CategoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'CategoryModel(name: $name, image: $icon)';
+  String toString() => 'CategoryModel(id: $id, name: $name, image: $icon)';
 
   @override
   bool operator ==(covariant CategoryModel other) {
