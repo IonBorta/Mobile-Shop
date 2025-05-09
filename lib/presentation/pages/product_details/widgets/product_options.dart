@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProductOptionsRow extends StatelessWidget {
+  final String size;
+  final String color;
 
   final _decoration = BoxDecoration(
               border: Border.all(
@@ -8,6 +10,8 @@ class ProductOptionsRow extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(25)
             );
+
+  ProductOptionsRow({super.key, required this.size, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class ProductOptionsRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Size",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,height: 20/14),),
-                  Text("XL",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,height: 20/14),)
+                  Text(size,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,height: 20/14),)
                 ],
               ),
             ),

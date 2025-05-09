@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ProductDescription extends StatelessWidget {
-  const ProductDescription({super.key});
+  final String details;
+  const ProductDescription({super.key, required this.details});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Details",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,height: 26/18),),
+        Text("Details",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,height: 26/18),textAlign: TextAlign.start,),
         const SizedBox(height: 16,),
         Text(
-          "Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum Loremp ipsum ",
+          details,
           style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,height: 20/14),
         ),
 

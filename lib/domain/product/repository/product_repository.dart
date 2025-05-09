@@ -4,6 +4,6 @@ import 'package:mobile_shop/domain/product/entities/product.dart';
 abstract class ProductRepository {
   Future<Result<List<ProductEntity>>> getBestSellingProducts();
   Future<Result<List<ProductEntity>>> getAllProducts();
-  Future<Result<List<ProductEntity>>> getProductsByCategory();
-  Future<Result<ProductEntity>> getProductById();
+  Future<Result<List<ProductEntity>>> getProductsByCategory(String categoryName);
+  Future<Result<ProductEntity>> getProductById(int id);
 }

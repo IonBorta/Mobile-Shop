@@ -6,9 +6,13 @@ import 'package:mobile_shop/data/category/source/category_api_data_source.dart';
 import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
 import 'package:mobile_shop/data/product/source/product_api_data_source.dart';
 import 'package:mobile_shop/domain/category/usecases/get_categories.dart';
+import 'package:mobile_shop/domain/product/usecases/get_all_products.dart';
 import 'package:mobile_shop/domain/product/usecases/get_best_selling_products.dart';
+import 'package:mobile_shop/domain/product/usecases/get_product_by_id.dart';
+import 'package:mobile_shop/domain/product/usecases/get_products_by_category.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
 import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
+import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/main/main_page.dart';
 
 void main() {
@@ -38,9 +42,45 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<ProductsBloc>(
             create: (context) => ProductsBloc(
-              GetBestSellingProductsUseCase(productRepository: ProductRepositoryImpl(productApiDataSource: ProductApiDataSourceImpl()))
+              GetBestSellingProductsUseCase(productRepository: ProductRepositoryImpl(productApiDataSource: ProductApiDataSourceImpl())),
+              GetAllProductsUseCase(productRepository: ProductRepositoryImpl(productApiDataSource: ProductApiDataSourceImpl()))
             ), // Incarca categoriile imediat
           ),
+          BlocProvider<BestSellingProductsCubit>(
+            create:
+                (context) => BestSellingProductsCubit(
+                  GetBestSellingProductsUseCase(
+                    productRepository: ProductRepositoryImpl(
+                      productApiDataSource: ProductApiDataSourceImpl(),
+                    ),
+                  ),
+                ),
+          ),
+          BlocProvider<MoreToExploreProductsCubit>(
+            create:
+                (context) => MoreToExploreProductsCubit(
+                  GetAllProductsUseCase(
+                    productRepository: ProductRepositoryImpl(
+                      productApiDataSource: ProductApiDataSourceImpl(),
+                    ),
+                  ),
+                  GetProductsByCategoryUseCase(
+                    productRepository: ProductRepositoryImpl(
+                      productApiDataSource: ProductApiDataSourceImpl(),
+                    ),
+                  ),
+                ),
+          ),
+          // BlocProvider<ProductDetailsCubit>(
+          //   create:
+          //       (context) => ProductDetailsCubit(
+          //         GetProductByIdUseCase(
+          //           productRepository: ProductRepositoryImpl(
+          //             productApiDataSource: ProductApiDataSourceImpl(),
+          //           ),
+          //         ),
+          //       ),
+          // ),
         ], 
         child: MainPage(),
       )

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProductPriceAndButton extends StatelessWidget {
-  const ProductPriceAndButton({super.key});
+  final double price;
+  const ProductPriceAndButton({super.key, required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ProductPriceAndButton extends StatelessWidget {
             children: [
               Text("PRICE",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400,height: 12/16,color: Color(0xff929292)),),
               const SizedBox(height: 2,), 
-              Text(" \$100",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,height: 24/18,color: Color(0xff00C569)),)
+              Text(" \$$price",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,height: 24/18,color: Color(0xff00C569)),)
             ]
           ),
           TextButton(

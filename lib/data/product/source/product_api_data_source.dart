@@ -8,28 +8,21 @@ import 'package:mobile_shop/data/product/models/product.dart';
 abstract class ProductApiDataSource {
   Future<Result<List<ProductModel>>> getBestSellingProducts();
   Future<Result<List<ProductModel>>> getAllProducts();
-  Future<Result<List<ProductModel>>> getProductsByCategory();
-  Future<Result<ProductModel>> getProductById();
+  Future<Result<List<ProductModel>>> getProductsByCategory(String categoryName);
+  Future<Result<ProductModel>> getProductById(int id);
 }
 
 class ProductApiDataSourceImpl extends ProductApiDataSource{
-  @override
-  Future<Result<List<ProductModel>>> getAllProducts() {
-    // TODO: implement getAllProducts
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Result<List<ProductModel>>> getBestSellingProducts() async {
+  Future<Result<List<ProductModel>>> _getProducts(String endpoint) async {
     try {
-      final uri = Uri.parse('http://mobile-shop-api.hiring.devebs.net/products/best-sold-products');
+      final uri = Uri.parse(endpoint);
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
-        debugPrint("status code = 200");
         final List<dynamic> decoded = json.decode(response.body)['results'];
+        debugPrint("Length = ${decoded.length}");
         for (var element in decoded) {
-          print(element);
+          debugPrint(element.toString()); // safer logging
         }
         final products = decoded
             .map((item) => ProductModel.fromMap(item as Map<String, dynamic>))
@@ -39,21 +32,54 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
         return Result.error('Server responded with status code: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error: $e');
       return Result.error('An error occurred: $e');
     }
   }
 
   @override
-  Future<Result<ProductModel>> getProductById() {
-    // TODO: implement getProductById
-    throw UnimplementedError();
+  Future<Result<List<ProductModel>>> getAllProducts() {
+    return _getProducts("http://mobile-shop-api.hiring.devebs.net/products");
   }
 
   @override
-  Future<Result<List<ProductModel>>> getProductsByCategory() {
-    // TODO: implement getProductsByCategory
-    throw UnimplementedError();
+  Future<Result<List<ProductModel>>> getBestSellingProducts() {
+    return _getProducts("http://mobile-shop-api.hiring.devebs.net/products/best-sold-products");
+  }
+
+  @override
+  Future<Result<ProductModel>> getProductById(int id) async {
+    try {
+      debugPrint("############ id = $id ###########");
+      final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products/$id";
+      final uri = Uri.parse(endpoint);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = json.decode(response.body) as Map<String, dynamic>;
+        debugPrint("############ decoded = $decoded ###########");
+        final product = ProductModel.fromMap(decoded);
+        debugPrint("############ producs = ${product.toString()} ###########");
+        return Result.ok(product);
+      } else {
+        return Result.error('Server responded with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error: $e');
+      return Result.error('An error occurred: $e');
+    }
+  }
+
+  @override
+  Future<Result<List<ProductModel>>> getProductsByCategory(String categoryName) async {
+    try {
+      final encodedCategory = Uri.encodeQueryComponent(categoryName);
+      final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products?search=$encodedCategory";
+      return await _getProducts(endpoint);
+    } catch (e) {
+      debugPrint('Error: $e');
+      return Result.error('An error occurred: $e');
+    }
   }
   
 }

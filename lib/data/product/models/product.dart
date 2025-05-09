@@ -73,22 +73,41 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
-    return ProductModel(
-      id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'] as String : null,
-      details: map['details'] != null ? map['details'] as String : null,
-      size: map['size'] != null ? map['size'] as String : null,
-      colour: map['colour'] != null ? map['colour'] as String : null,
-      mainImage: map['main_image'] != null ? map['main_image'] as String : null,
-      price: map['price'] != null ? map['price'] as double : null,
-      category: map['category'] != null ? CategoryModel.fromMap(map['category'] as Map<String,dynamic>) : null,
-      images: (map['images'] as List?)
-        ?.map((imgMap) => imgMap['image'] as String?)
-        .toList(),
-      reviews: (map['reviews'] as List?)
-        ?.map((revMap) => revMap != null ? ReviewModel.fromMap(revMap) : null)
-        .toList(),
-    );
+    try {
+      return ProductModel(
+        id: map['id'] != null ? map['id'] as int : null,
+        name: map['name'] != null ? map['name'] as String : null,
+        details: map['details'] != null ? map['details'] as String : null,
+        size: map['size'] != null ? map['size'] as String : null,
+        colour: map['colour'] != null ? map['colour'] as String : null,
+        mainImage:
+            map['main_image'] != null ? map['main_image'] as String : null,
+        price: map['price'] != null ? map['price'] as double : null,
+        category:
+            map['category'] != null
+                ? CategoryModel.fromMap(map['category'] as Map<String, dynamic>)
+                : null,
+        images:
+            (map['images'] as List?)
+                ?.map(
+                  (imgMap) =>
+                      (imgMap as Map<String, dynamic>)['image'] as String?,
+                )
+                .toList(),
+        reviews:
+            (map['reviews'] as List<dynamic>?)
+                ?.map(
+                  (revMap) =>
+                      revMap != null
+                          ? ReviewModel.fromMap(revMap as Map<String, dynamic>)
+                          : null,
+                )
+                .toList(),
+      );
+    } on Exception catch (e) {
+      debugPrint("############ erorr = $e ###########");
+      return ProductModel();
+    }
   }
 
   String toJson() => json.encode(toMap());

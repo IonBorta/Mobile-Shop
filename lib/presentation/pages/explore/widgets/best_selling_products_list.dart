@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
-import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
+//import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
+import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/products_grid_list.dart';
 
 class Product {
@@ -15,33 +16,18 @@ class Product {
 class BestSellingProductsList extends StatelessWidget {
   BestSellingProductsList({super.key});
 
-  final List<Product> productss = [
-    Product(
-      imageUrl:
-          "https://img.joomcdn.net/077bbe2ce1543f1cbd0a7201dec19a54d0e58233_original.jpeg",
-      name: "KingKong mini",
-      price: 100,
-    ),
-    Product(
-      imageUrl:
-          "https://img.joomcdn.net/077bbe2ce1543f1cbd0a7201dec19a54d0e58233_original.jpeg",
-      name: "KingKong mini",
-      price: 100,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductsBloc, ProductsState>(
+    return BlocBuilder<BestSellingProductsCubit, BestSellingProductsState>(
       builder: (context, state) {
-        if (state is ProductsLoading) {
+        if (state is BestSellingProductsLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state is ProductsError) {
+        if (state is BestSellingProductsError) {
           return Center(child: Text("Error: ${state.message}"));
         }
-        if(state is ProductsLoaded){
+        if(state is BestSellingProductsLoaded){
           final products = state.products;
           return _BestSellingProducts(products: products);
         }

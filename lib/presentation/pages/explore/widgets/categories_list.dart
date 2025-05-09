@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/domain/category/entities/category.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
+import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 
 class Category {
   final String icon;
@@ -34,80 +35,118 @@ class CategoriesList extends StatelessWidget {
     );
   }
 }
-class _CategoriesList extends StatelessWidget {
+class _CategoriesList extends StatefulWidget {
   final List<CategoryEntity> categories;
   const _CategoriesList({required this.categories});
 
   @override
+  State<_CategoriesList> createState() => _CategoriesListState();
+}
+
+class _CategoriesListState extends State<_CategoriesList> {
+  int selectedIndex = -1;
+  @override
   Widget build(BuildContext context) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Categories",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                height: 24 / 18,
-              ),
-            ),
-            SizedBox(height: 18),
-            SizedBox(
-              height: 110,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(width: 18),
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
-                  return Column(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xFFF4F4F4),
-                              blurRadius: 20,
-                              offset: Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: ClipOval(
-                          child: category.icon == null ? Icon(Icons.error) :
-                            Image.network(
-                            category.icon!,
-                            width: 52,
-                            height: 52,
-                            fit: BoxFit.cover,
-                            //webHtmlElementStrategy:WebHtmlElementStrategy.prefer,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      SizedBox(
-                        width: 60,
-                        child: Text(
-                          category.name ?? "",
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 16 / 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Categories",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            height: 24 / 18,
+          ),
+        ),
+        SizedBox(height: 18),
+        SizedBox(
+          height: 110,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(width: 18),
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.categories.length,
+            itemBuilder: (context, index) {
+              final category = widget.categories[index];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                  context
+                      .read<MoreToExploreProductsCubit>()
+                      .getMoreToExploreProducts(category.name ?? "");
                 },
+                child: _CategoryItem(
+                  name: category.name,
+                  icon: category.icon,
+                  isSelected: selectedIndex == index,
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CategoryItem extends StatelessWidget {
+  final bool isSelected;
+  final String? name;
+  final String? icon;
+  const _CategoryItem({
+    required this.name,
+    required this.icon,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isSelected ? Colors.grey.shade400 : Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0xFFF4F4F4),
+                blurRadius: 20,
+                offset: Offset(0, 6),
               ),
+            ],
+          ),
+          padding: const EdgeInsets.all(4),
+          child: ClipOval(
+            child:
+                icon == null
+                    ? Icon(Icons.error)
+                    : Image.network(
+                      icon!,
+                      width: 52,
+                      height: 52,
+                      fit: BoxFit.cover,
+                      //webHtmlElementStrategy:WebHtmlElementStrategy.prefer,
+                    ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        SizedBox(
+          width: 60,
+          child: Text(
+            name ?? "",
+            style: TextStyle(
+              fontSize: 12,
+              height: 16 / 12,
+              fontWeight: FontWeight.w400,
             ),
-          ],
-        );
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
   }
 }

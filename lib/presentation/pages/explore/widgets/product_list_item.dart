@@ -1,60 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
+import 'package:mobile_shop/data/product/source/product_api_data_source.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
+import 'package:mobile_shop/domain/product/usecases/get_product_by_id.dart';
+import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/product_details/product_details_page.dart';
 
 class ProductListItem extends StatelessWidget {
   final ProductEntity product;
   const ProductListItem({super.key, required this.product});
-  final String defaultImage = "https://img.joomcdn.net/077bbe2ce1543f1cbd0a7201dec19a54d0e58233_original.jpeg";
+  final String defaultImage =
+      "https://img.joomcdn.net/077bbe2ce1543f1cbd0a7201dec19a54d0e58233_original.jpeg";
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-              onTap: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsPage()
-                  )
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 164 / 240,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: product.mainImage == null ? Placeholder(child: Center(child: Text("IMAGE IS MISSING"),),) : 
-                              Image.network(
+      onTap: () {
+        //context.read<ProductDetailsCubit>().getProductById(product.id ?? -1);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) => BlocProvider(
+                  create:
+                      (context) => ProductDetailsCubit(
+                        GetProductByIdUseCase(
+                          productRepository: ProductRepositoryImpl(
+                            productApiDataSource: ProductApiDataSourceImpl(),
+                          ),
+                        ),
+                      )..getProductById(product.id ?? -1),
+                  child: const ProductDetailsPage(),
+                ),
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 164 / 240,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child:
+                        product.mainImage == null
+                            ? Placeholder(
+                              child: Center(child: Text("IMAGE IS MISSING")),
+                            )
+                            : Image.network(
                               product.mainImage!,
                               fit: BoxFit.cover,
                               //webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                             ),
-                          ),
-                        ),
-                        FavoriteStarIcon(),
-                      ],
-                    ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    product.name ?? "Unknow",
-                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,height: 24/16),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                  ),
-                  Text('\$${product.price}',
-                    style: TextStyle(
-                      color: Color(0xff00C569),
-                      fontSize: 16,fontWeight: FontWeight.w400,height: 24/16
-                    ),
-                  ),
-                ],
-              ),
-            );
+                ),
+                FavoriteStarIcon(),
+              ],
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            product.name ?? "Unknow",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              height: 24 / 16,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          Text(
+            '\$${product.price}',
+            style: TextStyle(
+              color: Color(0xff00C569),
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              height: 24 / 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
