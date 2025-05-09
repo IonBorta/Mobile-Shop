@@ -7,8 +7,8 @@ import 'package:mobile_shop/data/product/models/product.dart';
 
 abstract class ProductApiDataSource {
   Future<Result<List<ProductModel>>> getBestSellingProducts();
-  Future<Result<List<ProductModel>>> getAllProducts();
-  Future<Result<List<ProductModel>>> getProductsByCategory(String categoryName);
+  Future<Result<List<ProductModel>>> getAllProducts(int page,int size);
+  Future<Result<List<ProductModel>>> getProductsByCategory(int page,int size,String categoryName);
   Future<Result<ProductModel>> getProductById(int id);
 }
 
@@ -18,12 +18,16 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
       final uri = Uri.parse(endpoint);
       final response = await http.get(uri);
 
+      if(response.statusCode == 404){
+        return Result.ok([]);
+      }
+
       if (response.statusCode == 200) {
         final List<dynamic> decoded = json.decode(response.body)['results'];
-        debugPrint("Length = ${decoded.length}");
-        for (var element in decoded) {
-          debugPrint(element.toString()); // safer logging
-        }
+        // debugPrint("Length = ${decoded.length}");
+        // for (var element in decoded) {
+        //   debugPrint(element.toString());
+        // }
         final products = decoded
             .map((item) => ProductModel.fromMap(item as Map<String, dynamic>))
             .toList();
@@ -38,8 +42,8 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
   }
 
   @override
-  Future<Result<List<ProductModel>>> getAllProducts() {
-    return _getProducts("http://mobile-shop-api.hiring.devebs.net/products");
+  Future<Result<List<ProductModel>>> getAllProducts(int page, int size) {
+    return _getProducts("http://mobile-shop-api.hiring.devebs.net/products?page=$page&page_size=$size");
   }
 
   @override
@@ -71,10 +75,10 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
   }
 
   @override
-  Future<Result<List<ProductModel>>> getProductsByCategory(String categoryName) async {
+  Future<Result<List<ProductModel>>> getProductsByCategory(int page,int size, String categoryName) async {
     try {
       final encodedCategory = Uri.encodeQueryComponent(categoryName);
-      final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products?search=$encodedCategory";
+      final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products?search=$encodedCategory&page=$page&page_size=$size";
       return await _getProducts(endpoint);
     } catch (e) {
       debugPrint('Error: $e');

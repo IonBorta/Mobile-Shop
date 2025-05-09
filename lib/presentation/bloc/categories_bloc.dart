@@ -16,6 +16,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     : _getCategoriesUseCase = usecase, super(CategoriesInitial()) {
 
     on<LoadCategories>(_onLoadCategories);
+    on<SelectCategory>(_onSelectCategory);
   }
 
   FutureOr<void> _onLoadCategories(LoadCategories event, Emitter<CategoriesState> emit) async {
@@ -24,9 +25,16 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     final result = await _getCategoriesUseCase.call();
     switch (result) {
       case Ok<List<CategoryEntity>>():
-        emit(CategoriesLoaded(result.value));
+        emit(CategoriesLoaded(result.value,null));
       case Error():
         emit(CategoriesError(result.error));
+    }
+  }
+
+  FutureOr<void> _onSelectCategory(SelectCategory event, Emitter<CategoriesState> emit) {
+    if (state is CategoriesLoaded) {
+      final currentState = state as CategoriesLoaded;
+      emit(currentState.copyWith(selectedCategory: event.selectedCategory));
     }
   }
 }

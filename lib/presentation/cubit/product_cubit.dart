@@ -53,22 +53,42 @@ class MoreToExploreProductsCubit extends Cubit<MoreToExploreProductsState> {
 
   MoreToExploreProductsCubit(this._allProductsUseCase, this._getProductsByCategoryUseCase) : super(MoreToExploreProductsInitial());
 
-  Future<void> getMoreToExploreProducts([String categoryName = ""]) async {
-    emit(MoreToExploreProductsLoading());
+  //Future<List<ProductEntity>?> getMoreToExploreProducts({
+  Future<void> getMoreToExploreProducts({
+    page = 1,
+    int size = 10,
+    String categoryName = "",
+  }) async {
+    if (page == 1) emit(MoreToExploreProductsLoading());
+
     final Result<List<ProductEntity>> result;
 
     if(categoryName.isNotEmpty){
-      result = await _getProductsByCategoryUseCase.call(categoryName);
+      result = await _getProductsByCategoryUseCase.call(page,size,categoryName);
     }
     else {
-      result = await _allProductsUseCase.call();
+      result = await _allProductsUseCase.call(page,size);
     }
 
     switch (result) {
       case Ok<List<ProductEntity>>():
-        emit(MoreToExploreProductsLoaded(result.value));
+        // emit(MoreToExploreProductsLoaded(result.value));
+        final newProducts = result.value;
+
+        // If it's page > 1 and already loaded, append
+        if (state is MoreToExploreProductsLoaded && page > 1) {
+          final currentProducts =
+              (state as MoreToExploreProductsLoaded).products;
+          emit(
+            MoreToExploreProductsLoaded([...currentProducts, ...newProducts]),
+          );
+        } else {
+          // For initial load or first page
+          emit(MoreToExploreProductsLoaded(newProducts));
+        }
       case Error():
         emit(MoreToExploreProductsError(result.error));
     }
+    // //return null;
   }
 }

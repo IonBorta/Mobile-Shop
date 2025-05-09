@@ -15,7 +15,12 @@ class ExplorePage extends StatefulWidget {
   State<ExplorePage> createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClientMixin{
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  int _currentPage = 1;
+  int maxPages = 3;
+  final int _limit = 10;
 
   @override
   void initState() {
@@ -25,10 +30,40 @@ class _ExplorePageState extends State<ExplorePage> {
     // context.read<ProductsBloc>().add(LoadAllProducts());
     context.read<BestSellingProductsCubit>().getBestSellingProducts();
     context.read<MoreToExploreProductsCubit>().getMoreToExploreProducts();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent &&
+          !_isLoading) {
+            _fetchMoreProducts();
+          }
+    });
+  }
+  void _fetchMoreProducts() async {
+    _isLoading = true;
+    final state = context.read<CategoriesBloc>().state;
+    String? selectedCategoryName;
+
+    if (state is CategoriesLoaded && state.selectedCategory != null) {
+      selectedCategoryName = state.selectedCategory!.name;
+      if (maxPages < _currentPage) _currentPage = 1;
+    }
+    
+    if (_currentPage <= maxPages) {
+      _currentPage++;
+      context.read<MoreToExploreProductsCubit>()
+          .getMoreToExploreProducts(page: _currentPage, size: _limit, categoryName: selectedCategoryName ?? "");
+    }
+    _isLoading = false;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -40,13 +75,19 @@ class _ExplorePageState extends State<ExplorePage> {
             const SizedBox(height: 43,),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   children: [
                     BestSellingProductsList(),
-                    const SizedBox(height: 44,),
-                    MoreToExploreProductsList()
+                    const SizedBox(height: 20,),
+                    MoreToExploreProductsList(),
+                    if (_isLoading)
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: CircularProgressIndicator(),
+                      ),
                   ],
-                )
+                ),
               )
             ),
           ]
@@ -54,4 +95,8 @@ class _ExplorePageState extends State<ExplorePage> {
       )
     );
   }
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

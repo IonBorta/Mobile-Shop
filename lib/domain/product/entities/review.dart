@@ -4,7 +4,7 @@ class ReviewEntity {
   final String? createdAt;
   final String? firstName;
   final String? lastName;
-  final double? rating;
+  final int? rating;
   final String? message;
   final String? image;
 

@@ -39,7 +39,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   FutureOr<void> _onLoadAllProducts(LoadAllProducts event, Emitter<ProductsState> emit) async{
     emit(ProductsLoading());
 
-    final result = await _allProductsUseCase.call();
+    final result = await _allProductsUseCase.call(1,10);
     switch (result) {
       case Ok<List<ProductEntity>>():
         emit(AllProductsLoaded(allProducts: result.value));

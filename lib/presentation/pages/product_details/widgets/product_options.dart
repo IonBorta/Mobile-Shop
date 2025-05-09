@@ -26,7 +26,7 @@ class ProductOptionsRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Size",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,height: 20/14),),
-                  Text(size,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,height: 20/14),)
+                  Text(size[0],style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,height: 20/14),)
                 ],
               ),
             ),

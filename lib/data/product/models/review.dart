@@ -7,7 +7,7 @@ class ReviewModel {
   final String? createdAt;
   final String? firstName;
   final String? lastName;
-  final double? rating;
+  final int? rating;
   final String? message;
   final String? image;
 
@@ -28,7 +28,7 @@ class ReviewModel {
     String? createdAt,
     String? firstName,
     String? lastName,
-    double? rating,
+    int? rating,
     String? message,
     String? image,
   }) {
@@ -64,7 +64,7 @@ class ReviewModel {
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
       firstName: map['first_name'] != null ? map['first_name'] as String : null,
       lastName: map['last_name'] != null ? map['last_name'] as String : null,
-      rating: map['rating'] != null ? map['rating'] as double : null,
+      rating: map['rating'] != null ? map['rating'] as int : null,
       message: map['message'] != null ? map['message'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
     );

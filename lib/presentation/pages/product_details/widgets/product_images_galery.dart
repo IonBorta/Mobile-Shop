@@ -9,6 +9,7 @@ class ProductImagesGalery extends StatelessWidget {
   //   "https://img.joomcdn.net/5c7057bf8d61aae173cb3dabd8a6be94249e3595_original.jpeg",
   //   "https://img.joomcdn.net/7f28ca352adbc2e90d551b8c6efea9468020597c_original.jpeg"
   // ];
+  
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class ProductImagesGalery extends StatelessWidget {
             child: PageView.builder(
               itemCount: imageUrls.length,
               itemBuilder: (context, index) {
-                return Image.network(
+                return imageUrls[index].startsWith("http://127.0.0.1:8000") ? 
+                Placeholder(child: Center(child: Text("NO IMAGE FOUND")),) :
+                Image.network(
                   imageUrls[index],
                   fit: BoxFit.cover,
                 );

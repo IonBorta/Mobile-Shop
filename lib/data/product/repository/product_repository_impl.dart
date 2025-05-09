@@ -22,17 +22,10 @@ class ProductRepositoryImpl extends ProductRepository {
 
 
   @override
-  Future<Result<List<ProductEntity>>> getAllProducts() async{
-    final result = await _productApiDataSource.getAllProducts();
+  Future<Result<List<ProductEntity>>> getAllProducts(int page,int size) async{
+    final result = await _productApiDataSource.getAllProducts(page,size);
 
     return _mapProductModelsToEntities(result);
-    // if (result is Ok<List<ProductModel>>) {
-    //   final entities = result.value
-    //       .map((model) => ProductMapper.modelToEntitiy(model))
-    //       .toList();
-    //   return Result.ok(entities);
-    // }
-    // return Result.error((result as Error).error);
   }
 
   @override
@@ -40,13 +33,6 @@ class ProductRepositoryImpl extends ProductRepository {
     final result = await _productApiDataSource.getBestSellingProducts();
 
     return _mapProductModelsToEntities(result);
-    // if (result is Ok<List<ProductModel>>) {
-    //   final entities = result.value
-    //       .map((model) => ProductMapper.modelToEntitiy(model))
-    //       .toList();
-    //   return Result.ok(entities);
-    // }
-    // return Result.error((result as Error).error);
   }
 
   @override
@@ -61,8 +47,8 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<Result<List<ProductEntity>>> getProductsByCategory(String categoryName) async {
-    final result = await _productApiDataSource.getProductsByCategory(categoryName);
+  Future<Result<List<ProductEntity>>> getProductsByCategory(int page,int size,String categoryName) async {
+    final result = await _productApiDataSource.getProductsByCategory(page,size,categoryName);
     return _mapProductModelsToEntities(result);
   }
   

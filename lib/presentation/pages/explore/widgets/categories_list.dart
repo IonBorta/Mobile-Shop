@@ -72,9 +72,10 @@ class _CategoriesListState extends State<_CategoriesList> {
                   setState(() {
                     selectedIndex = index;
                   });
+                  context.read<CategoriesBloc>().add(SelectCategory(category));
                   context
                       .read<MoreToExploreProductsCubit>()
-                      .getMoreToExploreProducts(category.name ?? "");
+                      .getMoreToExploreProducts(categoryName: category.name ?? "");
                 },
                 child: _CategoryItem(
                   name: category.name,

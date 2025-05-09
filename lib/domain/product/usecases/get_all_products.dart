@@ -7,7 +7,7 @@ class GetAllProductsUseCase {
 
   GetAllProductsUseCase({required ProductRepository productRepository}) : _productRepository = productRepository;
 
-  Future<Result<List<ProductEntity>>> call() async{
-    return await _productRepository.getAllProducts();
+  Future<Result<List<ProductEntity>>> call(int page,int size) async{
+    return await _productRepository.getAllProducts(page,size);
   }
 }

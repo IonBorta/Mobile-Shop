@@ -9,8 +9,19 @@ final class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
   final List<CategoryEntity> categories;
+  final CategoryEntity? selectedCategory;
 
-  CategoriesLoaded(this.categories);
+  CategoriesLoaded(this.categories, this.selectedCategory);
+
+  CategoriesLoaded copyWith({
+    List<CategoryEntity>? categories,
+    CategoryEntity? selectedCategory,
+  }) {
+    return CategoriesLoaded(
+      categories ?? this.categories,
+      selectedCategory ?? this.selectedCategory,
+    );
+  }
 }
 
 class CategoriesError extends CategoriesState {

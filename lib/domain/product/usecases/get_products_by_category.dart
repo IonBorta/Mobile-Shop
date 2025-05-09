@@ -7,7 +7,7 @@ class GetProductsByCategoryUseCase {
 
   GetProductsByCategoryUseCase({required ProductRepository productRepository}) : _productRepository = productRepository;
 
-  Future<Result<List<ProductEntity>>> call(String categoryName) async {
-    return await _productRepository.getProductsByCategory(categoryName);
+  Future<Result<List<ProductEntity>>> call(int page,int size,String categoryName) async {
+    return await _productRepository.getProductsByCategory(page,size,categoryName);
   }
 }
