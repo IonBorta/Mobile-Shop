@@ -11,9 +11,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentPage = 0;
 
-  List<Widget> pages = const [
-    ExplorePage(),
-  ];
+  List<Widget> pages = const [ExplorePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +21,16 @@ class _MainPageState extends State<MainPage> {
         iconSize: 30,
         // selectedFontSize: 0,
         // unselectedFontSize: 0,
-        onTap: (value) {
-        },
+        onTap: (value) {},
         currentIndex: currentPage,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Explore',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Explore'),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            label: 'Cart'
+            label: 'Cart',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ]
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
       ),
     );
   }

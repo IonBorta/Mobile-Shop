@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +30,12 @@ class CategoryApiDataSourceImpl extends CategoryApiDataSource{
       } else {
         return Result.error('Server responded with status code: ${response.statusCode}');
       }
+    } on SocketException {
+      debugPrint('No internet connection.');
+      return Result.error('No internet connection.');
+    } on TimeoutException {
+      debugPrint('Request timed out.');
+      return Result.error('Request timed out.');
     } catch (e) {
       debugPrint(e.toString());
       return Result.error('An error occurred: $e');

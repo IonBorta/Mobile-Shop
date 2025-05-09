@@ -1,6 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_shop/connectivity_wrapper.dart';
 import 'package:mobile_shop/data/category/repository/category_impl.dart';
 import 'package:mobile_shop/data/category/source/category_api_data_source.dart';
 import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
@@ -15,17 +17,19 @@ import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/main/main_page.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
       home: //MainPage()
       MultiBlocProvider(
         providers:[
+          //BlocProvider(create: (_) => ConnectivityCubit()),
           BlocProvider<CategoriesBloc>(
             create: (context) => CategoriesBloc(
               usecase: GetCategoriesUseCase(categoryRepository: CategoryRepositoryImpl(categoryApiDataSource: CategoryApiDataSourceImpl()))
@@ -82,7 +87,7 @@ class MyApp extends StatelessWidget {
           //       ),
           // ),
         ], 
-        child: MainPage(),
+        child: ConnectivityWrapper(child: MainPage()),
       )
     );
   }

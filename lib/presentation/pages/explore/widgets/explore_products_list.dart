@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
-import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
-import 'package:mobile_shop/presentation/pages/explore/widgets/product_list_item.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/products_grid_list.dart';
 
 class MoreToExploreProductsList extends StatefulWidget {
