@@ -6,8 +6,8 @@ import 'package:meta/meta.dart';
 import 'package:mobile_shop/core/result.dart';
 
 import 'package:mobile_shop/domain/product/entities/product.dart';
-import 'package:mobile_shop/domain/product/usecases/get_all_products.dart';
-import 'package:mobile_shop/domain/product/usecases/get_best_selling_products.dart';
+import 'package:mobile_shop/domain/product/usecases/remote/get_all_products.dart';
+import 'package:mobile_shop/domain/product/usecases/remote/get_best_selling_products.dart';
 
 part 'products_event.dart';
 part 'products_state.dart';

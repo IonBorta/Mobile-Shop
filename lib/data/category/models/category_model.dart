@@ -1,8 +1,21 @@
 import 'dart:convert';
 
-class CategoryModel {
+import 'package:hive/hive.dart';
+import 'package:mobile_shop/hive_helper/hive_types.dart';
+import 'package:mobile_shop/hive_helper/hive_adapters.dart';
+import 'package:mobile_shop/hive_helper/fields/category_model_fields.dart';
+
+
+part 'category_model.g.dart';
+
+
+@HiveType(typeId: HiveTypes.categoryModel, adapterName: HiveAdapters.categoryModel)
+class CategoryModel extends HiveObject{
+	@HiveField(CategoryModelFields.id)
   final int? id;
+	@HiveField(CategoryModelFields.name)
   final String? name;
+	@HiveField(CategoryModelFields.icon)
   final String? icon;
 
   CategoryModel({
@@ -10,16 +23,6 @@ class CategoryModel {
     this.icon,
     this.id
   });
-
-  CategoryModel copyWith({
-    String? name,
-    String? icon,
-  }) {
-    return CategoryModel(
-      name: name ?? this.name,
-      icon: icon ?? this.icon,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -43,16 +46,4 @@ class CategoryModel {
 
   @override
   String toString() => 'CategoryModel(id: $id, name: $name, image: $icon)';
-
-  @override
-  bool operator ==(covariant CategoryModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.name == name &&
-      other.icon == icon;
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ icon.hashCode;
 }

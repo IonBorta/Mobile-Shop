@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
+import 'package:mobile_shop/presentation/cubit/favorites_cubit.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/categories_list.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/best_selling_products_list.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/explore_products_list.dart';
@@ -29,6 +30,7 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
     // context.read<ProductsBloc>().add(LoadAllProducts());
     context.read<BestSellingProductsCubit>().getBestSellingProducts();
     context.read<MoreToExploreProductsCubit>().getMoreToExploreProducts();
+    context.read<FavoritesCubit>().loadFavorites();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent &&
           !_isLoading) {

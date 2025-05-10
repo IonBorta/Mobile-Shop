@@ -1,21 +1,38 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:mobile_shop/data/category/models/category_model.dart';
+import 'package:mobile_shop/data/product/models/review_model.dart';
+import 'package:mobile_shop/hive_helper/hive_types.dart';
+import 'package:mobile_shop/hive_helper/hive_adapters.dart';
+import 'package:mobile_shop/hive_helper/fields/product_model_fields.dart';
 
-import 'package:mobile_shop/data/category/models/category.dart';
-import 'package:mobile_shop/data/product/models/review.dart';
 
-class ProductModel {
+part 'product_model.g.dart';
+
+
+@HiveType(typeId: HiveTypes.productModel, adapterName: HiveAdapters.productModel)
+class ProductModel extends HiveObject{
+	@HiveField(ProductModelFields.id)
   final int? id;
+	@HiveField(ProductModelFields.name)
   final String? name;
+	@HiveField(ProductModelFields.details)
   final String? details;
+	@HiveField(ProductModelFields.size)
   final String? size;
+	@HiveField(ProductModelFields.colour)
   final String? colour;
+	@HiveField(ProductModelFields.mainImage)
   final String? mainImage;
+	@HiveField(ProductModelFields.price)
   final double? price;
+	@HiveField(ProductModelFields.category)
   final CategoryModel? category;
+	@HiveField(ProductModelFields.images)
   final List<String?>? images;
+	@HiveField(ProductModelFields.reviews)
   final List<ReviewModel?>? reviews;
 
   ProductModel({
@@ -30,32 +47,6 @@ class ProductModel {
     this.images,
     this.reviews,
   });
-
-  ProductModel copyWith({
-    int? id,
-    String? name,
-    String? details,
-    String? size,
-    String? colour,
-    String? mainImage,
-    double? price,
-    CategoryModel? category,
-    List<String?>? images,
-    List<ReviewModel?>? reviews,
-  }) {
-    return ProductModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      details: details ?? this.details,
-      size: size ?? this.size,
-      colour: colour ?? this.colour,
-      mainImage: mainImage ?? this.mainImage,
-      price: price ?? this.price,
-      category: category ?? this.category,
-      images: images ?? this.images,
-      reviews: reviews ?? this.reviews,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -117,36 +108,5 @@ class ProductModel {
   @override
   String toString() {
     return 'ProductModel(id: $id, name: $name, details: $details, size: $size, colour: $colour, mainImage: $mainImage, price: $price, category: $category, images: $images, reviews: $reviews)';
-  }
-
-  @override
-  bool operator ==(covariant ProductModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.details == details &&
-      other.size == size &&
-      other.colour == colour &&
-      other.mainImage == mainImage &&
-      other.price == price &&
-      other.category == category &&
-      listEquals(other.images, images) &&
-      listEquals(other.reviews, reviews);
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-      name.hashCode ^
-      details.hashCode ^
-      size.hashCode ^
-      colour.hashCode ^
-      mainImage.hashCode ^
-      price.hashCode ^
-      category.hashCode ^
-      images.hashCode ^
-      reviews.hashCode;
   }
 }

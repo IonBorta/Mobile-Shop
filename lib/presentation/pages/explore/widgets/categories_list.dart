@@ -70,13 +70,20 @@ class _CategoriesListState extends State<_CategoriesList> {
               final category = widget.categories[index];
               return GestureDetector(
                 onTap: () {
+                  String? categoryName = category.name;
                   setState(() {
-                    selectedIndex = index;
+                    if(selectedIndex != index){
+                      selectedIndex = index;
+                    }
+                    else {
+                      selectedIndex = -1;
+                      categoryName = null;
+                    }
                   });
                   context.read<CategoriesBloc>().add(SelectCategory(category));
                   context
                       .read<MoreToExploreProductsCubit>()
-                      .getMoreToExploreProducts(categoryName: category.name ?? "");
+                      .getMoreToExploreProducts(categoryName: categoryName ?? "");
                 },
                 child: _CategoryItem(
                   name: category.name,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_shop/main.dart';
+import 'package:mobile_shop/route_tracking_observer.dart';
 
 class ConnectivityWrapper extends StatefulWidget {
   final Widget child;
@@ -24,42 +25,38 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
       if (results.contains(ConnectivityResult.none)) {
         if (!_hasLostConnection) {
           _hasLostConnection = true;
-          _showNoConnectionDialog();
-          // navigatorKey.currentState?.push(MaterialPageRoute(
-          //   builder: (_) => LostInternet(),
-          // ));
+          _showNoConnectionDialog('No internet connection');
         }
       } else {
         if (_hasLostConnection) {
           _hasLostConnection = false;
-          // Close the dialog if it's open
-          if (navigatorKey.currentContext != null) {
-            Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop();
-          }
-          //navigatorKey.currentState?.popUntil((route) => route.isFirst);
+          _showNoConnectionDialog('Connected back',reload: true);
         }
       }
     });
   }
 
-  void _showNoConnectionDialog() {
+  void _showNoConnectionDialog(String text,{bool reload = false}) {
     showDialog(
       context: navigatorKey.currentContext!,
       barrierDismissible: false, // Prevent dismissing by tapping outside
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false, // Disable back button
-        child: AlertDialog(
-          title: Text('No internet connection'),
-          content: Text('Please check your internet settings...'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Optionally let user try again, or do nothing
-              },
-              child: Text('Retry'),
-            ),
-          ],
-        ),
+      builder: (context) => AlertDialog(
+        content: Text(text),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              if (reload) {
+                final currentRoute = routeObserver.currentRoute;
+                if (currentRoute != null) {
+                  navigatorKey.currentState!.popAndPushNamed(currentRoute);
+                  debugPrint("************************* PAGE $currentRoute RELOADED ****************************");
+                }
+              }
+            },
+            child: Text('Ok'),
+          ),
+        ],
       ),
     );
   }

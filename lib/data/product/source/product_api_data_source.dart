@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_shop/core/result.dart';
-import 'package:mobile_shop/data/product/models/product.dart';
+import 'package:mobile_shop/data/product/models/product_model.dart';
 
 abstract class ProductApiDataSource {
   Future<Result<List<ProductModel>>> getBestSellingProducts();
@@ -73,16 +73,20 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
         final product = ProductModel.fromMap(decoded);
         debugPrint("############ producs = ${product.toString()} ###########");
         return Result.ok(product);
-      } else {
+      } 
+      else {
         return Result.error('Server responded with status code: ${response.statusCode}');
       }
-    } on SocketException {
+    } 
+    on SocketException {
       debugPrint('No internet connection.');
       return Result.error('No internet connection.');
-    } on TimeoutException {
+    } 
+    on TimeoutException {
       debugPrint('Request timed out.');
       return Result.error('Request timed out.');
-    } catch (e) {
+    } 
+    catch (e) {
       debugPrint('Error: $e');
       return Result.error('An error occurred: $e');
     }
@@ -94,13 +98,16 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
       final encodedCategory = Uri.encodeQueryComponent(categoryName);
       final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products?search=$encodedCategory&page=$page&page_size=$size";
       return await _getProducts(endpoint);
-    } on SocketException {
+    } 
+    on SocketException {
       debugPrint('No internet connection.');
       return Result.error('No internet connection.');
-    } on TimeoutException {
+    } 
+    on TimeoutException {
       debugPrint('Request timed out.');
       return Result.error('Request timed out.');
-    } catch (e) {
+    } 
+    catch (e) {
       debugPrint('Error: $e');
       return Result.error('An error occurred: $e');
     }

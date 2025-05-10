@@ -9,7 +9,8 @@ class ProductsGridList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return products.isEmpty ? Center(child: Text("No products"),) :
+          GridView.builder(
           padding: const EdgeInsets.all(8.0),
           shrinkWrap: true, 
           physics: NeverScrollableScrollPhysics(), 

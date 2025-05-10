@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
+import 'package:mobile_shop/presentation/cubit/favorites_cubit.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_description.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_images_galery.dart';
@@ -8,13 +9,32 @@ import 'package:mobile_shop/presentation/pages/product_details/widgets/product_o
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_price_and_button.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_title.dart';
 
-class ProductDetailsPage extends StatelessWidget {
+class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({super.key});
 
   @override
+  State<ProductDetailsPage> createState() => _ProductDetailsPageState();
+}
+
+class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProductDetailsCubit>().getProductById();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+      body: _ProductDetailsPage(),
+    );
+  }
+}
+class _ProductDetailsPage extends StatelessWidget {
+  const _ProductDetailsPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
         builder: (context, state) {
           if (state is ProductDetailsLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -26,18 +46,16 @@ class ProductDetailsPage extends StatelessWidget {
 
           if (state is ProductDetailsLoaded) {
             final product = state.product;
-            return _ProductDetailsPage(product: product);
+            return _ProductDetails(product: product);
           }
           return Placeholder();
         },
-      ),
-    );
+      );
   }
 }
-
-class _ProductDetailsPage extends StatelessWidget {
+class _ProductDetails extends StatelessWidget {
   final ProductEntity product;
-  const _ProductDetailsPage({required this.product});
+  const _ProductDetails({required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +68,11 @@ class _ProductDetailsPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ProductImagesGalery(imageUrls: product.images?.whereType<String>().toList() ?? [],),
+                ProductImagesGalery(
+                  productId: product.id!,
+                  imageUrls: product.images?.whereType<String>().toList() ?? [],
+                  onFavoriteToggle: () => context.read<FavoritesCubit>().addOrRemoveFavorite(product)
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(

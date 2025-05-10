@@ -1,14 +1,31 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ReviewModel {
+import 'package:hive/hive.dart';
+import 'package:mobile_shop/hive_helper/hive_types.dart';
+import 'package:mobile_shop/hive_helper/hive_adapters.dart';
+import 'package:mobile_shop/hive_helper/fields/review_model_fields.dart';
+
+
+part 'review_model.g.dart';
+
+
+@HiveType(typeId: HiveTypes.reviewModel, adapterName: HiveAdapters.reviewModel)
+class ReviewModel extends HiveObject{
+	@HiveField(ReviewModelFields.id)
   final int? id;
+	@HiveField(ReviewModelFields.modifiedAt)
   final String? modifiedAt;
+	@HiveField(ReviewModelFields.createdAt)
   final String? createdAt;
+	@HiveField(ReviewModelFields.firstName)
   final String? firstName;
+	@HiveField(ReviewModelFields.lastName)
   final String? lastName;
+	@HiveField(ReviewModelFields.rating)
   final int? rating;
+	@HiveField(ReviewModelFields.message)
   final String? message;
+	@HiveField(ReviewModelFields.image)
   final String? image;
 
   ReviewModel({
@@ -21,28 +38,6 @@ class ReviewModel {
     this.message,
     this.image,
   });
-
-  ReviewModel copyWith({
-    int? id,
-    String? modifiedAt,
-    String? createdAt,
-    String? firstName,
-    String? lastName,
-    int? rating,
-    String? message,
-    String? image,
-  }) {
-    return ReviewModel(
-      id: id ?? this.id,
-      modifiedAt: modifiedAt ?? this.modifiedAt,
-      createdAt: createdAt ?? this.createdAt,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      rating: rating ?? this.rating,
-      message: message ?? this.message,
-      image: image ?? this.image,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -77,32 +72,5 @@ class ReviewModel {
   @override
   String toString() {
     return 'ReviewModel(id: $id, modifiedAt: $modifiedAt, createdAt: $createdAt, firstName: $firstName, lastName: $lastName, rating: $rating, message: $message, image: $image)';
-  }
-
-  @override
-  bool operator ==(covariant ReviewModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.modifiedAt == modifiedAt &&
-      other.createdAt == createdAt &&
-      other.firstName == firstName &&
-      other.lastName == lastName &&
-      other.rating == rating &&
-      other.message == message &&
-      other.image == image;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-      modifiedAt.hashCode ^
-      createdAt.hashCode ^
-      firstName.hashCode ^
-      lastName.hashCode ^
-      rating.hashCode ^
-      message.hashCode ^
-      image.hashCode;
   }
 }

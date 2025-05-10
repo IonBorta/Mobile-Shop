@@ -5,7 +5,7 @@ import 'package:mobile_shop/domain/product/repository/product_repository.dart';
 class GetProductByIdUseCase {
   final ProductRepository _productRepository;
 
-  GetProductByIdUseCase({required ProductRepository productRepository}) : _productRepository = productRepository;
+  GetProductByIdUseCase(this._productRepository); 
   
   Future<Result<ProductEntity>> call(int id) async{
     return await _productRepository.getProductById(id);

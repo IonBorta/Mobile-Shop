@@ -1,26 +1,34 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobile_shop/connectivity_wrapper.dart';
-import 'package:mobile_shop/data/category/repository/category_impl.dart';
-import 'package:mobile_shop/data/category/source/category_api_data_source.dart';
-import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
-import 'package:mobile_shop/data/product/source/product_api_data_source.dart';
-import 'package:mobile_shop/domain/category/usecases/get_categories.dart';
-import 'package:mobile_shop/domain/product/usecases/get_all_products.dart';
-import 'package:mobile_shop/domain/product/usecases/get_best_selling_products.dart';
-import 'package:mobile_shop/domain/product/usecases/get_product_by_id.dart';
-import 'package:mobile_shop/domain/product/usecases/get_products_by_category.dart';
+import 'package:mobile_shop/data/category/models/category_model.dart';
+import 'package:mobile_shop/data/product/models/product_model.dart';
+import 'package:mobile_shop/data/product/models/review_model.dart';
+import 'package:mobile_shop/di/dependency_injection.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
-import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
+import 'package:mobile_shop/presentation/cubit/favorites_cubit.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
+import 'package:mobile_shop/presentation/pages/favorite/favorite_page.dart';
 import 'package:mobile_shop/presentation/pages/main/main_page.dart';
+import 'package:mobile_shop/presentation/pages/product_details/product_details_page.dart';
+import 'package:mobile_shop/presentation/pages/profile/profile_page.dart';
+import 'package:mobile_shop/route_tracking_observer.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
-  runApp(MyApp());
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(CategoryModelAdapter());
+  Hive.registerAdapter(ReviewModelAdapter());
+  Hive.registerAdapter(ProductModelAdapter());
+  await setupDi();
+  runApp(MyApp()
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -28,67 +36,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        textTheme: GoogleFonts.interTextTheme(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CategoriesBloc>.value(
+          value: getIt.get<CategoriesBloc>(),
+        ),
+        BlocProvider<BestSellingProductsCubit>.value(
+          value: getIt.get<BestSellingProductsCubit>(),
+        ),
+        BlocProvider<MoreToExploreProductsCubit>.value(
+          value: getIt.get<MoreToExploreProductsCubit>(),
+        ),
+        BlocProvider<ProductDetailsCubit>.value(
+          value: getIt<ProductDetailsCubit>(),
+        ),
+        BlocProvider<FavoritesCubit>.value(
+          value: getIt.get<FavoritesCubit>(),
+        ),
+      ],
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        navigatorObservers: [routeObserver],
+        initialRoute: '/',
+        routes: {
+          '/': (context) => ConnectivityWrapper(child: MainPage()),
+          '/details': (context) => const ProductDetailsPage(),
+          '/favorites': (context) => const FavoriteProductsPage(),
+          '/profile': (context) => const ProfilePage(),
+        },
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          textTheme: GoogleFonts.interTextTheme(),
+        ),
       ),
-      home: //MainPage()
-      MultiBlocProvider(
-        providers:[
-          //BlocProvider(create: (_) => ConnectivityCubit()),
-          BlocProvider<CategoriesBloc>(
-            create: (context) => CategoriesBloc(
-              usecase: GetCategoriesUseCase(categoryRepository: CategoryRepositoryImpl(categoryApiDataSource: CategoryApiDataSourceImpl()))
-            ), // Incarca categoriile imediat
-          ),
-          BlocProvider<ProductsBloc>(
-            create: (context) => ProductsBloc(
-              GetBestSellingProductsUseCase(productRepository: ProductRepositoryImpl(productApiDataSource: ProductApiDataSourceImpl())),
-              GetAllProductsUseCase(productRepository: ProductRepositoryImpl(productApiDataSource: ProductApiDataSourceImpl()))
-            ), // Incarca categoriile imediat
-          ),
-          BlocProvider<BestSellingProductsCubit>(
-            create:
-                (context) => BestSellingProductsCubit(
-                  GetBestSellingProductsUseCase(
-                    productRepository: ProductRepositoryImpl(
-                      productApiDataSource: ProductApiDataSourceImpl(),
-                    ),
-                  ),
-                ),
-          ),
-          BlocProvider<MoreToExploreProductsCubit>(
-            create:
-                (context) => MoreToExploreProductsCubit(
-                  GetAllProductsUseCase(
-                    productRepository: ProductRepositoryImpl(
-                      productApiDataSource: ProductApiDataSourceImpl(),
-                    ),
-                  ),
-                  GetProductsByCategoryUseCase(
-                    productRepository: ProductRepositoryImpl(
-                      productApiDataSource: ProductApiDataSourceImpl(),
-                    ),
-                  ),
-                ),
-          ),
-          // BlocProvider<ProductDetailsCubit>(
-          //   create:
-          //       (context) => ProductDetailsCubit(
-          //         GetProductByIdUseCase(
-          //           productRepository: ProductRepositoryImpl(
-          //             productApiDataSource: ProductApiDataSourceImpl(),
-          //           ),
-          //         ),
-          //       ),
-          // ),
-        ], 
-        child: ConnectivityWrapper(child: MainPage()),
-      )
     );
   }
 }

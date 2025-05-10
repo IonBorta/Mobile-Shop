@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_shop/data/product/repository/product_repository_impl.dart';
-import 'package:mobile_shop/data/product/source/product_api_data_source.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
-import 'package:mobile_shop/domain/product/usecases/get_product_by_id.dart';
+import 'package:mobile_shop/presentation/cubit/favorites_cubit.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
-import 'package:mobile_shop/presentation/pages/product_details/product_details_page.dart';
 
 class ProductListItem extends StatelessWidget {
   final ProductEntity product;
@@ -18,23 +15,8 @@ class ProductListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //context.read<ProductDetailsCubit>().getProductById(product.id ?? -1);
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder:
-                (context) => BlocProvider(
-                  create:
-                      (context) => ProductDetailsCubit(
-                        GetProductByIdUseCase(
-                          productRepository: ProductRepositoryImpl(
-                            productApiDataSource: ProductApiDataSourceImpl(),
-                          ),
-                        ),
-                      )..getProductById(product.id ?? -1),
-                  child: const ProductDetailsPage(),
-                ),
-          ),
-        );
+        context.read<ProductDetailsCubit>().saveProductId(id: product.id,isFavorite: product.isFavorite);
+        Navigator.of(context).pushNamed('/details');
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +47,7 @@ class ProductListItem extends StatelessWidget {
                           ),
                   ),
                 ),
-                FavoriteStarIcon(),
+                FavoriteStarIcon(product: product,),
               ],
             ),
           ),
@@ -96,24 +78,38 @@ class ProductListItem extends StatelessWidget {
 }
 
 class FavoriteStarIcon extends StatelessWidget {
-  const FavoriteStarIcon({super.key});
+  final ProductEntity product;
+  const FavoriteStarIcon({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final isFavorite = context.select<FavoritesCubit, bool>((cubit) {
+      final state = cubit.state;
+      if (state is FavoritesLoaded) {
+        return state.products.any((p) => p.id == product.id);
+      }
+      return false;
+    });
     return Positioned(
       top: 8,
       right: 0,
       child: IconButton(
-        onPressed: () {},
-        icon: Container(
-          height: 30,
-          width: 30,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(Icons.star_border, size: 16, color: Colors.black),
-        ),
+            onPressed: () {
+              context.read<FavoritesCubit>().addOrRemoveFavorite(product);
+            },
+            icon: Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                color: isFavorite ? Colors.green : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border,
+                size: 16,
+                color: isFavorite ? Colors.yellow : Colors.black,
+              ),
+            ),
       ),
     );
   }

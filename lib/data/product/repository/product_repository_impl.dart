@@ -1,6 +1,6 @@
 import 'package:mobile_shop/core/result.dart';
 import 'package:mobile_shop/data/product/mappers/product_mapper.dart';
-import 'package:mobile_shop/data/product/models/product.dart';
+import 'package:mobile_shop/data/product/models/product_model.dart';
 import 'package:mobile_shop/data/product/source/product_api_data_source.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
 import 'package:mobile_shop/domain/product/repository/product_repository.dart';

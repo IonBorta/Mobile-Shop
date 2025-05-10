@@ -22,7 +22,7 @@ class SearchBarAndCameraIcon extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                   ),
                 ),
-                elevation: const WidgetStatePropertyAll(0),
+                elevation: const WidgetStatePropertyAll(2),
                 onTap: () {}, 
                 onChanged: (text) {}, 
             )
