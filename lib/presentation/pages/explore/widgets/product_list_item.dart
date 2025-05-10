@@ -25,61 +25,71 @@ class ProductListItem extends StatelessWidget {
             aspectRatio: 164 / 240,
             child: Stack(
               children: [
-                Positioned.fill(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: product.mainImage == null
-                        ? Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Text("IMAGE IS MISSING"),
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: product.mainImage!,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            errorWidget: (context, url, error) => const Center(
-                              child: Icon(Icons.broken_image),
-                            ),
-                          ),
-                  ),
-                ),
-                FavoriteStarIcon(product: product,),
+                _buildImages(product.mainImage),
+                _FavoriteStarIcon(product: product,),
               ],
             ),
           ),
           SizedBox(height: 8),
-          Text(
-            product.name ?? "Unknow",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              height: 24 / 16,
-            ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-          Text(
-            '\$${product.price}',
-            style: TextStyle(
-              color: Color(0xff00C569),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              height: 24 / 16,
-            ),
-          ),
+          _buildProductName(product.name),
+          _buildProductPrice(product.price),
         ],
       ),
     );
   }
 }
 
-class FavoriteStarIcon extends StatelessWidget {
+Widget _buildImages(String? mainImage) {
+  return Positioned.fill(
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: mainImage == null
+              ? Container(
+                color: Colors.grey[300],
+                child: const Center(child: Text("IMAGE IS MISSING")),
+              )
+              : CachedNetworkImage(
+                imageUrl: mainImage,
+                fit: BoxFit.cover,
+                placeholder:
+                    (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                errorWidget:
+                    (context, url, error) =>
+                        const Center(child: Icon(Icons.broken_image)),
+              ),
+    ),
+  );
+}
+
+Widget _buildProductName(String? name) {
+  return Text(
+    name ?? "Unknow",
+    style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: 24 / 16,
+    ),
+    overflow: TextOverflow.ellipsis,
+    maxLines: 1,
+  );
+}
+
+Widget _buildProductPrice(double? price) {
+  return Text(
+    '\$$price',
+    style: TextStyle(
+      color: Color(0xff00C569),
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: 24 / 16,
+    ),
+  );
+}
+
+class _FavoriteStarIcon extends StatelessWidget {
   final ProductEntity product;
-  const FavoriteStarIcon({super.key, required this.product});
+  const _FavoriteStarIcon({required this.product});
 
   @override
   Widget build(BuildContext context) {

@@ -19,8 +19,10 @@ class FavoriteProductsPage extends StatelessWidget {
         }
         if(state is FavoritesLoaded){
           final products = state.products;
-          debugPrint("-------------- favorites loaded");
-          return SingleChildScrollView(child: ProductsGridList(products: products));
+          
+          return SingleChildScrollView(
+              child: ProductsGridList(products: products),
+            );
         }
         return const SizedBox.shrink();
       },

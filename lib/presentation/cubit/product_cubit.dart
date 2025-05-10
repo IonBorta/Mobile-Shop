@@ -84,43 +84,21 @@ class MoreToExploreProductsCubit extends Cubit<MoreToExploreProductsState> {
   }) async {
     if (page == 1) emit(MoreToExploreProductsLoading());
 
-    final Result<List<ProductEntity>> result;
-
-    if(categoryName.isNotEmpty){
-      result = await _getProductsByCategoryUseCase.call(page,size,categoryName);
-    }
-    else {
-      result = await _allProductsUseCase.call(page,size);
-    }
-
-    // Get favorites from local storage
-    List<ProductEntity> favoriteProducts = [];
-    final favoritesResult = await _favoritesUseCase.call();
-    if(result is Ok<List<ProductEntity>>){
-      favoriteProducts = (favoritesResult as Ok<List<ProductEntity>>).value;
-    }
-
-    // debugPrint("++=======================================================++++");
-    // for (var element in favoriteProducts) {
-    //   debugPrint(element.toString());
-    // }
-    final favoriteIds = favoriteProducts.map((p) => p.id).toSet();
+    // Get products from API
+    final Result<List<ProductEntity>> result = await _getProductsFromApi(page, size, categoryName);
+    // Get favorites ids from local storage
+    final favoriteIds = await _getFavoriteProductIds();
 
     switch (result) {
       case Ok<List<ProductEntity>>():
-        // emit(MoreToExploreProductsLoaded(result.value));
         final newProducts = result.value;
 
-        // Merge API products with isFavorite flag
+        // Set isFavorite field
         final mergedProducts = newProducts.map((product) {
           return product.copyWith(
             isFavorite: favoriteIds.contains(product.id),
           );
         }).toList();
-        // debugPrint("++=======================================================++++");
-        // for (var element in mergedProducts) {
-        //   debugPrint(element.toString());
-        // }
 
         // If it's page > 1 and already loaded, append
         if (state is MoreToExploreProductsLoaded && page > 1) {
@@ -131,10 +109,24 @@ class MoreToExploreProductsCubit extends Cubit<MoreToExploreProductsState> {
           // For initial load or first page
           emit(MoreToExploreProductsLoaded(mergedProducts));
         }
-        //emit(FavoritesLoaded(products));
+
       case Error():
         emit(MoreToExploreProductsError(result.error));
     }
-    // //return null;
+  }
+  Future<Result<List<ProductEntity>>> _getProductsFromApi(int page, int size, String categoryName) async{
+    return categoryName.isNotEmpty 
+      ? await _getProductsByCategoryUseCase.call(page, size, categoryName)
+      : await _allProductsUseCase.call(page, size);
+  }
+  Future<Set<int?>> _getFavoriteProductIds() async {
+    List<ProductEntity> favoriteProducts = [];
+    final favoritesResult = await _favoritesUseCase.call();
+    if(favoritesResult is Ok<List<ProductEntity>>){
+      favoriteProducts = favoritesResult.value;
+      final favoriteIds = favoriteProducts.map((p) => p.id).toSet();
+      return favoriteIds;
+    }
+    return {};
   }
 }

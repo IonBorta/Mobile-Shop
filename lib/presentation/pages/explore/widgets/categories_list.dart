@@ -51,14 +51,7 @@ class _CategoriesListState extends State<_CategoriesList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Categories",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            height: 24 / 18,
-          ),
-        ),
+        _buildCategoriesTitle(),
         SizedBox(height: 18),
         SizedBox(
           height: 110,
@@ -99,6 +92,17 @@ class _CategoriesListState extends State<_CategoriesList> {
   }
 }
 
+Widget _buildCategoriesTitle() {
+  return Text(
+    "Categories",
+    style: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      height: 24 / 18,
+    ),
+  );
+}
+
 class _CategoryItem extends StatelessWidget {
   final bool isSelected;
   final String? name;
@@ -113,68 +117,64 @@ class _CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected ? Colors.grey.shade400 : Colors.white,
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xFFF4F4F4),
-                blurRadius: 20,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(4),
-          child: ClipOval(
-            child: icon == null
-              ? Container(
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: Text("IMAGE IS MISSING"),
-                  ),
-                )
-              : CachedNetworkImage(
-                  imageUrl: icon!,
-                  width: 52,
-                  height: 52,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => const Center(
-                    child: Icon(Icons.broken_image),
-                  ),
-                ),
-            // child:
-            //     icon == null
-            //         ? Icon(Icons.error)
-            //         : Image.network(
-            //           icon!,
-            //           width: 52,
-            //           height: 52,
-            //           fit: BoxFit.cover,
-            //           //webHtmlElementStrategy:WebHtmlElementStrategy.prefer,
-            //         ),
-          ),
-        ),
+        _buildCategoryImage(isSelected, icon),
         const SizedBox(height: 14),
-        SizedBox(
-          width: 60,
-          child: Text(
-            name ?? "",
-            style: TextStyle(
-              fontSize: 12,
-              height: 16 / 12,
-              fontWeight: FontWeight.w400,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
+        _buildCategoryName(name),
       ],
     );
   }
+}
+
+Widget _buildCategoryImage(bool isSelected, String? icon) {
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: isSelected ? Colors.grey.shade400 : Colors.white,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0xFFF4F4F4),
+          blurRadius: 20,
+          offset: Offset(0, 6),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.all(4),
+    child: ClipOval(
+      child:
+          icon == null
+              ? Container(
+                color: Colors.grey[300],
+                child: const Center(child: Text("IMAGE IS MISSING")),
+              )
+              : CachedNetworkImage(
+                imageUrl: icon!,
+                width: 52,
+                height: 52,
+                fit: BoxFit.cover,
+                placeholder:
+                    (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                errorWidget:
+                    (context, url, error) =>
+                        const Center(child: Icon(Icons.broken_image)),
+              ),
+    ),
+  );
+}
+Widget _buildCategoryName(String? name) {
+  return SizedBox(
+    width: 60,
+    child: Text(
+      name ?? "",
+      style: TextStyle(
+        fontSize: 12,
+        height: 16 / 12,
+        fontWeight: FontWeight.w400,
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    ),
+  );
 }

@@ -26,10 +26,7 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
 
       if (response.statusCode == 200) {
         final List<dynamic> decoded = json.decode(response.body)['results'];
-        // debugPrint("Length = ${decoded.length}");
-        // for (var element in decoded) {
-        //   debugPrint(element.toString());
-        // }
+
         final products = decoded
             .map((item) => ProductModel.fromMap(item as Map<String, dynamic>))
             .toList();
@@ -62,16 +59,15 @@ class ProductApiDataSourceImpl extends ProductApiDataSource{
   @override
   Future<Result<ProductModel>> getProductById(int id) async {
     try {
-      debugPrint("############ id = $id ###########");
       final String endpoint = "http://mobile-shop-api.hiring.devebs.net/products/$id";
       final uri = Uri.parse(endpoint);
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decoded = json.decode(response.body) as Map<String, dynamic>;
-        debugPrint("############ decoded = $decoded ###########");
+
         final product = ProductModel.fromMap(decoded);
-        debugPrint("############ producs = ${product.toString()} ###########");
+        
         return Result.ok(product);
       } 
       else {

@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_shop/domain/product/entities/product.dart';
-//import 'package:mobile_shop/presentation/bloc/products_bloc.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 import 'package:mobile_shop/presentation/pages/explore/widgets/products_grid_list.dart';
 
-class Product {
-  final String imageUrl;
-  final String name;
-  final double price;
-
-  Product({required this.imageUrl, required this.name, required this.price});
-}
-
 class BestSellingProductsList extends StatelessWidget {
-  BestSellingProductsList({super.key});
+  const BestSellingProductsList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,32 +35,32 @@ class _BestSellingProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Best Selling",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    height: 24 / 18,
-                  ),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    height: 24 / 16,
-                  ),
-                ),
-              ],
+            Text(
+              "Best Selling",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                height: 24 / 18,
+              ),
             ),
-            const SizedBox(height: 29),
-            ProductsGridList(products: products),
+            Text(
+              "See all",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                height: 24 / 16,
+              ),
+            ),
           ],
-        );
+        ),
+        const SizedBox(height: 29),
+        ProductsGridList(products: products),
+      ],
+    );
   }
 }

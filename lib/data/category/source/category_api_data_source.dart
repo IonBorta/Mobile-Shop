@@ -18,11 +18,8 @@ class CategoryApiDataSourceImpl extends CategoryApiDataSource{
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
-        debugPrint("status code = 200");
         final List<dynamic> decoded = json.decode(response.body)['results'];
-        // for (var element in decoded) {
-        //   print(element);
-        // }
+
         final categories = decoded
             .map((item) => CategoryModel.fromMap(item as Map<String, dynamic>))
             .toList();
