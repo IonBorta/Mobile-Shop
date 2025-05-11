@@ -21,6 +21,7 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
   int _currentPage = 1;
   int maxPages = 3;
   final int _limit = 10;
+  String? oldSelectedCategoryName;
 
   @override
   void initState() {
@@ -45,11 +46,15 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
 
     if (state is CategoriesLoaded && state.selectedCategory != null) {
       selectedCategoryName = state.selectedCategory!.name;
-      if (maxPages < _currentPage) _currentPage = 1;
+      if(oldSelectedCategoryName != selectedCategoryName){
+        _currentPage = 1;
+        oldSelectedCategoryName = selectedCategoryName;
+      }
     }
-
+    
+    
+    _currentPage++;
     if (_currentPage <= maxPages) {
-      _currentPage++;
       context.read<MoreToExploreProductsCubit>()
           .getMoreToExploreProducts(page: _currentPage, size: _limit, categoryName: selectedCategoryName ?? "");
     }

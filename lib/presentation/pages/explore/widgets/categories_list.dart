@@ -5,13 +5,6 @@ import 'package:mobile_shop/domain/category/entities/category.dart';
 import 'package:mobile_shop/presentation/bloc/categories_bloc.dart';
 import 'package:mobile_shop/presentation/cubit/product_cubit.dart';
 
-class Category {
-  final String icon;
-  final String name;
-
-  Category({required this.icon, required this.name});
-}
-
 class CategoriesList extends StatelessWidget {
   const CategoriesList({super.key});
 
@@ -67,13 +60,14 @@ class _CategoriesListState extends State<_CategoriesList> {
                   setState(() {
                     if(selectedIndex != index){
                       selectedIndex = index;
+                      context.read<CategoriesBloc>().add(SelectCategory(category));
                     }
                     else {
                       selectedIndex = -1;
                       categoryName = null;
+                      context.read<CategoriesBloc>().add(SelectCategory(CategoryEntity()));
                     }
                   });
-                  context.read<CategoriesBloc>().add(SelectCategory(category));
                   context
                       .read<MoreToExploreProductsCubit>()
                       .getMoreToExploreProducts(categoryName: categoryName ?? "");
