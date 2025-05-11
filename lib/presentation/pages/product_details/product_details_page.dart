@@ -7,6 +7,7 @@ import 'package:mobile_shop/presentation/pages/product_details/widgets/product_d
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_images_galery.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_options.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_price_and_button.dart';
+import 'package:mobile_shop/presentation/pages/product_details/widgets/product_reviews.dart';
 import 'package:mobile_shop/presentation/pages/product_details/widgets/product_title.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -85,6 +86,7 @@ class _ProductDetails extends StatelessWidget {
                       const SizedBox(height: 36),
                       ProductDescription(details: product.details ?? "Unknown",),
                       const SizedBox(height: 16),
+                      ProductReviews(reviews: product.reviews ?? [])
                     ],
                   ),
                 ),

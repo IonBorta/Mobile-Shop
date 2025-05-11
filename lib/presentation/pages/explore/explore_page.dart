@@ -47,7 +47,7 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
       selectedCategoryName = state.selectedCategory!.name;
       if (maxPages < _currentPage) _currentPage = 1;
     }
-    
+
     if (_currentPage <= maxPages) {
       _currentPage++;
       context.read<MoreToExploreProductsCubit>()

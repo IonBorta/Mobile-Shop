@@ -149,7 +149,7 @@ Widget _buildCategoryImage(bool isSelected, String? icon) {
                 child: const Center(child: Text("IMAGE IS MISSING")),
               )
               : CachedNetworkImage(
-                imageUrl: icon!,
+                imageUrl: icon,
                 width: 52,
                 height: 52,
                 fit: BoxFit.cover,

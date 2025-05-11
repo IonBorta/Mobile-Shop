@@ -6,7 +6,7 @@ sealed class CategoriesEvent {}
 class LoadCategories extends CategoriesEvent {}
 
 class SelectCategory extends CategoriesEvent {
-  final CategoryEntity selectedCategory;
+  final CategoryEntity? selectedCategory;
 
   SelectCategory(this.selectedCategory);
 }
